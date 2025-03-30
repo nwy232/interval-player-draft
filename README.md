@@ -2,12 +2,11 @@ Just an interval player.
 
 Use JS in browser console:
 
-let V_Interval = 5; // Change this value as needed
+let V_Interval = 5;
 let video = document.querySelector("video");
 let lastStartTime = 0;
 let pausedAtTime = 0;
 
-// Function to play video for V_Interval seconds
 function playInterval(startTime) {
     if (!video) return;
 
@@ -20,8 +19,6 @@ function playInterval(startTime) {
         pausedAtTime = video.currentTime; // Save exact pause position
     }, V_Interval * 1000);
 }
-
-// Listen for key events
 document.addEventListener("keydown", (event) => {
     if (!video) return;
 
@@ -34,5 +31,4 @@ document.addEventListener("keydown", (event) => {
     }
 });
 
-// Start initial play
 playInterval(video.currentTime);
