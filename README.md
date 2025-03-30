@@ -2,6 +2,7 @@ Just an interval player.
 
 Use JS in browser console:
 
+```
 let V_Interval = 5;
 let video = document.querySelector("video");
 let lastStartTime = 0;
@@ -32,3 +33,4 @@ document.addEventListener("keydown", (event) => {
 });
 
 playInterval(video.currentTime);
+```
