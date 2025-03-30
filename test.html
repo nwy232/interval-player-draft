@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Interval Player</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        input, button { margin: 5px; padding: 8px; }
+        #player { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h2>YouTube Interval Player</h2>
+    <input type="text" id="videoUrl" placeholder="Enter YouTube URL">
+    <input type="number" id="interval" placeholder="Interval (seconds)" min="1" value="5">
+    <button onclick="loadVideo()">Load Video</button>
+    
+    <div id="player"></div>
+    
+    <script>
+        let player, V_Interval = 5, lastStartTime = 0, pausedAtTime = 0;
+        
+        function loadVideo() {
+            let url = document.getElementById("videoUrl").value;
+            let videoId = extractVideoId(url);
+            V_Interval = parseInt(document.getElementById("interval").value) || 5;
+            
+            if (videoId) {
+                if (player) player.destroy();
+                player = new YT.Player('player', {
+                    height: '360',
+                    width: '640',
+                    videoId: videoId,
+                    events: { 'onReady': startIntervalPlayback }
+                });
+            } else {
+                alert("Invalid YouTube URL");
+            }
+        }
+        
+        function extractVideoId(url) {
+            let match = url.match(/[?&]v=([^&#]+)/);
+            return match ? match[1] : null;
+        }
+        
+        function startIntervalPlayback(event) {
+            playInterval(0);
+        }
+        
+        function playInterval(startTime) {
+            if (!player) return;
+            player.seekTo(startTime, true);
+            player.playVideo();
+            setTimeout(() => {
+                player.pauseVideo();
+                lastStartTime = startTime;
+                pausedAtTime = player.getCurrentTime();
+            }, V_Interval * 1000);
+        }
+        
+        document.addEventListener("keydown", (event) => {
+            if (!player) return;
+            
+            if (event.key === "ArrowRight") {
+                playInterval(pausedAtTime);
+            } else if (event.key === "ArrowLeft") {
+                playInterval(lastStartTime);
+            }
+        });
+        
+        function onYouTubeIframeAPIReady() {}
+    </script>
+    
+    <script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>
